@@ -71,7 +71,7 @@ class EnacomSeeder extends Seeder
 
   private function saveDataToSystem()
   {
-    Enacom::insert($this->parsed_phones);
+      Enacom::insert($this->parsed_phones);
   }
 
   static function readFile(string $file)

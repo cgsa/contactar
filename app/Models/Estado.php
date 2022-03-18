@@ -27,11 +27,18 @@ class Estado extends Model
     protected $hidden = [];
 
 
-    public static function findByDescripcion($codigo)
+    public static function state($codigo, $seccion)
     {
         return self::where([
             ['codigo','=',$codigo],
+            ['seccion','=',$seccion],
         ])->first();
+    }
+
+
+    public function findByCodigo($codigo)
+    {
+        return self::where('codigo',$codigo)->get();
     }
 
 

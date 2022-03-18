@@ -15,11 +15,11 @@ class CreatePlanesTable extends Migration
     {
         Schema::create('planes', function (Blueprint $table) {
             $table->id();
-            $table->integer('solicitudes')->default('100');
+            $table->string('titulo', 60);
+            $table->text('descripcion');
             $table->integer('moneda');
             $table->float('valor', 10, 0);
-            $table->dateTime('vigencia_desde');
-            $table->dateTime('vigencia_hasta');
+            $table->integer('solicitudes');
             $table->bigInteger('idestado')->unsigned()->index();
             $table->foreign('idestado')->references('id')->on('estados')->onDelete('cascade');
             $table->timestamps();

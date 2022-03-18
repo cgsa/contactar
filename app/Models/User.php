@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable
@@ -49,5 +50,19 @@ class User extends Authenticatable
     public function cliente()
     {
         return $this->hasOne(Cliente::class, 'iduser');
+    }
+
+
+    public function pagoPlan()
+    {
+        return $this->hasOne(PagoPlan::class, 'iduser');
+    }
+
+
+    public function planUser()
+    {
+        $pago = PagoPlan::where('iduser', Auth::user()->id)->first();
+        $plan = is_null($pago)? 'S/P' : $pago->plan->titulo;
+        return _('Plan activo: '). $plan;
     }
 }

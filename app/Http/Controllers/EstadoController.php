@@ -15,6 +15,7 @@ class EstadoController extends Controller
         $campos = $request->validate([
            // 'valid_since' => ['sometimes', 'date', 'after_or_equal:today'],
         'descripcion' => ['required', 'string'],
+        'seccion' => ['required','string', 'max:3'],
         'codigo' => ['required','string', 'max:3']
         ],[
             'descripcion'=> 'El campo Descripción es obligatorio',
@@ -27,7 +28,8 @@ class EstadoController extends Controller
 
             Estado::create([
                 'descripcion' => $campos['descripcion'],
-                'seccion' => $campos['codigo'],
+                'codigo' => $campos['codigo'],
+                'seccion' => $campos['seccion'],
             ]);
 
             DB::commit();
@@ -63,10 +65,11 @@ class EstadoController extends Controller
         $campos = $request->validate([
            // 'valid_since' => ['sometimes', 'date', 'after_or_equal:today'],
         'descripcion' => ['sometimes', 'string'],
+        'seccion' => ['sometimes','string', 'max:3'],
         'codigo' => ['sometimes','string', 'max:3']
         ],[
             'descripcion'=> 'El campo Descripción es obligatorio',
-            'seccion'=> 'El campo Codigo es obligatorio',
+            'codigo'=> 'El campo Codigo es obligatorio',
         ]);
 
         try {
@@ -108,7 +111,6 @@ class EstadoController extends Controller
         } 
         
         catch (\Throwable $e) {
-            DB::rollBack();
             $code = is_numeric($e->getCode()) ? $e->getCode() : 500;
             return response()->json([
                 'status' => $code,
@@ -132,7 +134,6 @@ class EstadoController extends Controller
         } 
         
         catch (\Throwable $e) {
-            DB::rollBack();
             $code = is_numeric($e->getCode()) ? $e->getCode() : 500;
             return response()->json([
                 'status' => $code,

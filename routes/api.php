@@ -3,6 +3,8 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\EstadoController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\PlanController;
 use App\Http\Controllers\SolicitudController;
 use App\Http\Controllers\TelefonoController;
 use Illuminate\Http\Request;
@@ -39,9 +41,17 @@ Route::group([
 
 });
 
+
+
 Route::group([
     'prefix' => 'v1'
 ], function () {
+
+
+    Route::post('validate', [TelefonoController::class, 'identify'])->middleware('client');
+    Route::post('validate-file', [TelefonoController::class, 'processFile'])->middleware('client');
+
+
     Route::group([
     'middleware' => 'auth:api'
     ], function() {//processFile
@@ -55,6 +65,20 @@ Route::group([
         Route::put('estado/update/{id}', [EstadoController::class, 'update']);
         Route::post('estado/all', [EstadoController::class, 'estados']);
         Route::post('estado/get/{id}', [EstadoController::class, 'estado']);
+
+
+
+        Route::post('paypal/pay',[PaymentController::class, 'payWithPayPal']);
+        Route::get('paypal/status',[PaymentController::class, 'payPalStatus']);
+
+        /**
+         * Resource Planes
+         */
+        Route::post('planes/add', [PlanController::class, 'create']);
+        Route::put('planes/update/{id}', [PlanController::class, 'update']);
+        Route::post('planes/all', [PlanController::class, 'planes']);
+        Route::post('planes/get/{id}', [PlanController::class, 'plan']);
+
 
         /**
          * Resource Clientes

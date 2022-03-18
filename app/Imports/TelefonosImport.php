@@ -26,6 +26,8 @@ class TelefonosImport implements ToModel, WithValidation, WithHeadingRow, SkipsO
 
     private $status;
 
+    private $size = 1000;
+
     private $telefonos = [];
 
 
@@ -53,13 +55,19 @@ class TelefonosImport implements ToModel, WithValidation, WithHeadingRow, SkipsO
                   if (!$tel->passes($attribute, $value)) {
                        $onFailure($tel->message());
                   }
-              }
+            }
         ];
+    }
+
+
+    public function setbatchSize($size)
+    {
+        $this->size = $size;
     }
     
     public function batchSize(): int
     {
-        return 1000;
+        return $this->size;
     }
     
     public function chunkSize(): int
@@ -96,13 +104,19 @@ class TelefonosImport implements ToModel, WithValidation, WithHeadingRow, SkipsO
     }
 
 
-    public function getResult(): array
+    public function getProccessed(): array
     {
         return $this->telefonos;
     }
 
 
-    private function condition($telefono)
+    public function proccessed(): int
+    {
+        return count($this->telefonos);
+    }
+
+
+    private function condition($telefono): string
     {
         $estado = 'SNE';
 

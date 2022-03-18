@@ -9,6 +9,7 @@ use App\Models\Solicitud;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class TelefonoController extends Controller
 {
@@ -18,7 +19,10 @@ class TelefonoController extends Controller
         
         // Chequea los campos de entrada
         $campos = $request->validate([
-         'telefono' => ['required', 'numeric','digits_between:6,13'],
+         'telefono' => ['required', 'numeric','digits_between:8,14'],
+         'cod-pai' => ['required', 'string',Rule::in([
+             'VE','AR','BO','BR','CL','CO','EC','MX','PE','PY','UY'
+             ])],
          'ip-user' =>['sometimes','ip']
         ]);
         
@@ -26,16 +30,24 @@ class TelefonoController extends Controller
             
             $user = Auth::user();
 
-            $normalizador = new NormalizarTelefono($campos['telefono']);
+            $normalizador = new NormalizarTelefono($campos['cod-pai'], $campos['telefono']);
             $telefono = DB::select($normalizador->sql());
             $estado = 'SNE';
 
             if(is_countable($telefono[0]->Telefono)){
                 $estado = 'SE';
             }
+
+
+            if(
+                trim($telefono[0]->Localidad) === "No validado por enacom" 
+            ){
+                throw new \Error('No se encontro información referente');
+            }
+            
             
             $status = Estado::findByDescripcion($estado);
-            //dd($status);
+            
             DB::beginTransaction();   
 
             Solicitud::create([
@@ -75,31 +87,27 @@ class TelefonoController extends Controller
         ]);
 
         try { 
-            //dd($request->file('telefonos'));
-
 
             DB::beginTransaction();   
             $import = new TelefonosImport();
+            //$import->setbatchSize();
             $import->import($request->file('telefonos'),'local');
             
             foreach ($import->failures() as $failure) {
                 $fail = [
-                    'status' => 500,
                     'message' => [
                         'line'=>$failure->row(),                         
                         'error'=>$failure->errors(), 
                         'value'=>$failure->values()
                     ] ,
-                ];
-
-                
+                ];                
             }
             
             DB::commit();
 
             return response()->json([
                 'status' => 201,
-                'telefono' => $import->getResult(),
+                'telefono' => $import->getProccessed(),
                 'failures' => $fail
 
             ], 200);

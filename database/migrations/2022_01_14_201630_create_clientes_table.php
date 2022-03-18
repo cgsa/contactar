@@ -19,6 +19,7 @@ class CreateClientesTable extends Migration
             $table->string('nombrefantasia',100)->nullable();
             $table->string('mail',100);
             $table->string('cuit',20)->nullable();
+            $table->unsignedInteger('solicitudes')->nullable()->default(50);
             $table->bigInteger('iduser')->unsigned()->index();
             $table->foreign('iduser')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();

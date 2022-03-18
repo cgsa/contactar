@@ -2,8 +2,10 @@
 
 namespace App\Exceptions;
 
+use BadMethodCallException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -67,6 +69,12 @@ class Handler extends ExceptionHandler
         if ($exception instanceof ValidationException) {
             return response()->json(['message' => __('validation.invalid_data'), 'errors' => $exception->validator->getMessageBag()], 422);
         }
+
+        if ($exception instanceof BadMethodCallException) {
+            $e = new BadMethodCallException($exception->getMessage(), 500);
+            return response()->json(['error' => $exception->getMessage()], 404);
+        }
+        
         return parent::render($request, $exception);
     }
 }

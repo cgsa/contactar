@@ -1,7 +1,7 @@
 <?php
-
 namespace Database\Seeders;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -13,8 +13,19 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
-        //$this->call(EnacomSeeder::class);
-        $this->call(EstadoSeeder::class);
+        $this->loadSeeder([
+            UsersTableSeeder::class,
+            EstadoSeeder::class,
+            MetodoPagoSeeder::class
+        ]);
+    }
+
+
+    private function loadSeeder(array $class)
+    {
+        foreach($class as $value)
+        {
+            $this->call([$value]);
+        }
     }
 }

@@ -41,7 +41,7 @@ class EstadoSeeder extends Seeder
         try {
         $this->estados = self::readFile(__DIR__ . '/../data/estado_seeder.csv');
         $rubros_count = count($this->estados);
-        echo "[ESTADO] Se han encontrado {$rubros_count} phones." . PHP_EOL;
+        echo "[ESTADOS] Se han encontrado {$rubros_count} estados." . PHP_EOL;
         } catch (\Throwable $e) {
         throw $e;
         }
@@ -49,17 +49,18 @@ class EstadoSeeder extends Seeder
 
     private function parseDataToSystemFormat()
     {
-        echo "[ESTADO] Inicio de transformación de datos" . PHP_EOL;
+        echo "[ESTADOS] Inicio de transformación de datos" . PHP_EOL;
 
         $this->parsed_estados = array_map(function ($item) {
         return [
             'descripcion' => $item['descripcion'],
+            'seccion' => $item['seccion'],
             'codigo' => $item['codigo'],
         ];
 
         }, $this->estados);
 
-        echo "[PHONE] Fin de la transformación de datos" . PHP_EOL;
+        echo "[ESTADOS] Fin de la transformación de datos" . PHP_EOL;
     }
 
     private function saveDataToSystem()
