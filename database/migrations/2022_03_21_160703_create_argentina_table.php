@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateEnacomTable extends Migration
+class CreateArgentinaTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateEnacomTable extends Migration
      */
     public function up()
     {
-        Schema::create('enacom', function (Blueprint $table) {
+        Schema::create('argentina', function (Blueprint $table) {
             $table->id();
             $table->string('operador',256);
             $table->string('servicio', 30);
@@ -24,6 +24,7 @@ class CreateEnacomTable extends Migration
             $table->string('resolucion',30);
             $table->string('fecha',10);
             $table->smallInteger('is_cel_pho');
+            $table->timestamps();
         });
     }
 
@@ -34,6 +35,6 @@ class CreateEnacomTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('enacom');
+        Schema::dropIfExists('argentina');
     }
 }

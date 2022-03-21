@@ -2,7 +2,7 @@
 
 namespace App\Imports;
 
-use App\Http\Procesos\QueryNormalizadorTelefono;
+use App\Http\Procesos\NormalizarTelefono;
 use App\Models\Estado;
 use App\Models\Solicitud;
 use App\Rules\Telefono;
@@ -20,7 +20,7 @@ use Maatwebsite\Excel\Concerns\WithValidation;
 class TelefonosImport implements ToModel, WithValidation, WithHeadingRow, SkipsOnFailure, WithBatchInserts, WithChunkReading
 {
 
-    use Importable, SkipsFailures, QueryNormalizadorTelefono;
+    use Importable, SkipsFailures;
 
     private $user;
 
@@ -78,7 +78,7 @@ class TelefonosImport implements ToModel, WithValidation, WithHeadingRow, SkipsO
 
     private function addRegister( $campos )
     {
-        $telefono = $this->normalizador($campos['telefono']);
+        $telefono = $this->normalizador($campos['cod-pai'], $campos['telefono']);
 
         if(!is_object($telefono)){
             return false;
@@ -100,7 +100,7 @@ class TelefonosImport implements ToModel, WithValidation, WithHeadingRow, SkipsO
 
     private function getStatus($condition)
     {
-        return $this->status->findByDescripcion($condition);
+        return $this->status->state('S',$condition);
     }
 
 
@@ -128,9 +128,10 @@ class TelefonosImport implements ToModel, WithValidation, WithHeadingRow, SkipsO
         
     }
 
-    private function normalizador($telefono)
+    private function normalizador($codPai, $telefono)
     {
-        $result = DB::select($this->query($telefono));
+        $normalizador = new NormalizarTelefono($codPai, $telefono);
+        $result = DB::select($normalizador->sql());
         return is_countable($result)? $result[0] : null;
     }
 }

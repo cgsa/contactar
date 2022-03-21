@@ -54,13 +54,13 @@ class EnacomSeeder extends Seeder
     $this->parsed_phones = array_map(function ($item) {
       //var_dump($item);die;
       return [
-        'servicio' => $item['servicio'],
-        'modalidad' => $item['modalidad'],
-        'localidad' => $item['localidad'],
-        'indicativo' => $item['indicativo'],
-        'bloque' => $item['bloque'],
-        'resolucion' => $item['resolucion'],
-        'fecha' => $item['fecha'],
+        'servicio' => "$item[servicio]",
+        'modalidad' => "$item[modalidad]",
+        'localidad' => "$item[localidad]",
+        'indicativo' => "$item[indicativo]",
+        'bloque' => "$item[bloque]",
+        'resolucion' => "$item[resolucion]",
+        'fecha' => "$item[fecha]",
         'is_cel_pho' => $item['is_cel_pho'],
       ];
 

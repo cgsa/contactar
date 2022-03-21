@@ -16,7 +16,8 @@ class DatabaseSeeder extends Seeder
         $this->loadSeeder([
             UsersTableSeeder::class,
             EstadoSeeder::class,
-            MetodoPagoSeeder::class
+            MetodoPagoSeeder::class,
+            //EnacomSeeder::class
         ]);
     }
 

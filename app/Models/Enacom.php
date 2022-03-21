@@ -9,7 +9,7 @@ class Enacom extends Model
 {
     use HasFactory;
 
-    protected $table = "enacom";
+    protected $table = "argentina";
 
     protected $fillable = [
         'servicio',

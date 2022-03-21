@@ -84,6 +84,9 @@ class TelefonoController extends Controller
         // Chequea los campos de entrada
         $campos = $request->validate([
             'telefonos' => ['required', 'file','mimes:csv,xls'],
+            'cod-pai' => ['required', 'string',Rule::in([
+                'VE','AR','BO','BR','CL','CO','EC','MX','PE','PY','UY'
+            ])],
         ]);
 
         try { 
