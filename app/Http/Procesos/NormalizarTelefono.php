@@ -10,7 +10,7 @@ class NormalizarTelefono
     private $telefono;
 
 
-    public function __construct( $codPai, $telefono )
+    public function __construct( string $codPai, string $telefono )
     {
         $this->codPai = $codPai;
         $this->telefono = $telefono;
@@ -19,10 +19,10 @@ class NormalizarTelefono
 
     public function sql()
     {
-        return "SELECT normaliza_tel( $this->codPai , $this->telefono )as Telefono,
-        normaliza_operador( $this->codPai , $this->telefono )as Operador,
-        normaliza_localidad( $this->codPai , $this->telefono )as Localidad,
-        normaliza_iscel( $this->codPai , $this->telefono )as Es_Movil";
+        return "SELECT normaliza_tel( \"$this->codPai\" , \"$this->telefono\" )as Telefono,
+        normaliza_operador( \"$this->codPai\" , \"$this->telefono\" )as Operador,
+        normaliza_localidad( \"$this->codPai\" , \"$this->telefono\" )as Localidad,
+        normaliza_iscel( \"$this->codPai\" , \"$this->telefono\" )as Es_Movil";
     }
 
 
