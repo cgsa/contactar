@@ -6,10 +6,12 @@ use App\Http\Procesos\NormalizarTelefono;
 use App\Imports\TelefonosImport;
 use App\Models\Estado;
 use App\Models\Solicitud;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+use Laravel\Passport\Client;
 
 class TelefonoController extends Controller
 {
@@ -28,7 +30,8 @@ class TelefonoController extends Controller
         
         try { 
             
-            $user = Auth::user();
+            
+            $user = $this->getUser($request);
 
             $normalizador = new NormalizarTelefono($campos['cod-pai'], $campos['telefono']);
             $telefono = DB::select($normalizador->sql());
@@ -49,7 +52,7 @@ class TelefonoController extends Controller
             $status = Estado::state($estado, 'S');
             
             DB::beginTransaction();   
-
+            
             Solicitud::create([
                 'numero_original'=>$campos['telefono'],
                 'numero_encontrado'=>$telefono[0]->Telefono,
@@ -76,6 +79,17 @@ class TelefonoController extends Controller
                 'message' => $e->getMessage()
             ], 500);
         }
+    }
+
+
+    private function getUser(Request $request)
+    {
+        if($request->route()->uri == "api/v1/validate")
+        {
+            return OAuthClient::findByRequest($request);
+        }
+
+        return Auth::user();
     }
 
 
