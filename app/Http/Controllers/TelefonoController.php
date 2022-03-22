@@ -5,13 +5,13 @@ namespace App\Http\Controllers;
 use App\Http\Procesos\NormalizarTelefono;
 use App\Imports\TelefonosImport;
 use App\Models\Estado;
+use App\Models\OAuthClient;
 use App\Models\Solicitud;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
-use Laravel\Passport\Client;
 
 class TelefonoController extends Controller
 {
