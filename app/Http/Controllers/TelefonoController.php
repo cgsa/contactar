@@ -31,7 +31,7 @@ class TelefonoController extends Controller
         try { 
             
             
-            $user = $this->getUser($request);
+            $idUser = $this->getIdUser($request);
 
             $normalizador = new NormalizarTelefono($campos['cod-pai'], $campos['telefono']);
             $telefono = DB::select($normalizador->sql());
@@ -59,7 +59,7 @@ class TelefonoController extends Controller
                 'operador'=>$telefono[0]->Operador,
                 'localidad'=>$telefono[0]->Localidad,
                 'es_movil'=>is_countable($telefono[0]->Telefono)? $telefono[0]->Es_Movil: '',
-                'iduser'=> $user->id,
+                'iduser'=> $idUser,
                 'idestado'=>$status->id
             ]);
             
@@ -82,14 +82,14 @@ class TelefonoController extends Controller
     }
 
 
-    private function getUser(Request $request)
+    private function getIdUser(Request $request)
     {
         if($request->route()->uri == "api/v1/validate")
         {
-            return OAuthClient::findByRequest($request);
+            return OAuthClient::findByRequest($request)->user_id;
         }
 
-        return Auth::user();
+        return Auth::user()->id;
     }
 
 
