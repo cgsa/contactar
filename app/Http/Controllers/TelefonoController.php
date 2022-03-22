@@ -46,7 +46,7 @@ class TelefonoController extends Controller
             }
             
             
-            $status = Estado::findByDescripcion($estado);
+            $status = Estado::state('S', $estado);
             
             DB::beginTransaction();   
 
