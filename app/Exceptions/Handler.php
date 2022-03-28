@@ -66,9 +66,9 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
-        if ($exception instanceof ValidationException) {
+        /*if ($exception instanceof ValidationException) {
             return response()->json(['message' => __('validation.invalid_data'), 'errors' => $exception->validator->getMessageBag()], 422);
-        }
+        }*/
 
         if ($exception instanceof BadMethodCallException) {
             $e = new BadMethodCallException($exception->getMessage(), 500);

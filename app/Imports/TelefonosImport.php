@@ -88,10 +88,10 @@ class TelefonosImport implements ToModel, WithValidation, WithHeadingRow, SkipsO
         
         $this->telefonos[] = Solicitud::create([
             'numero_original'=>$campos['telefono'],
-            'numero_encontrado'=>$telefono->Telefono,
-            'operador'=>$telefono->Operador,
-            'localidad'=>$telefono->Localidad,
-            'es_movil'=>$telefono->Es_Movil,
+            'numero_encontrado'=>$telefono->telefono,
+            'operador'=>$telefono->operador,
+            'localidad'=>$telefono->localidad,
+            'es_movil'=>$telefono->es_movil,
             'iduser'=> $this->user->id,
             'idestado'=>$estado->id
         ]);

@@ -19,10 +19,10 @@ class NormalizarTelefono
 
     public function sql()
     {
-        return "SELECT normaliza_tel( \"$this->codPai\" , \"$this->telefono\" )as Telefono,
-        normaliza_operador( \"$this->codPai\" , \"$this->telefono\" )as Operador,
-        normaliza_localidad( \"$this->codPai\" , \"$this->telefono\" )as Localidad,
-        normaliza_iscel( \"$this->codPai\" , \"$this->telefono\" )as Es_Movil";
+        return "SELECT normaliza_tel( \"$this->codPai\" , \"$this->telefono\" )as telefono,
+        normaliza_operador( \"$this->codPai\" , \"$this->telefono\" )as operador,
+        normaliza_localidad( \"$this->codPai\" , \"$this->telefono\" )as localidad,
+        normaliza_iscel( \"$this->codPai\" , \"$this->telefono\" )as es_movil";
     }
 
 

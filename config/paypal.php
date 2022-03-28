@@ -21,4 +21,5 @@ return [
     'locale'                => env('PAYPAL_LOCALE', 'en_US'),
     'validate_ssl'          => env('PAYPAL_VALIDATE_SSL', true),
     'frontend_contactar'    => env('FRONTEND_CONTACTAR', 'http://127.0.0.1:8004'),
+    'backend_contactar'    => env('APP_URL', 'http://127.0.0.1:8004'),
 ];

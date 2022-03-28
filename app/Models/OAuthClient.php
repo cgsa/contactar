@@ -7,24 +7,19 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Laravel\Passport\Client;
 use Laravel\Passport\Token;
-use Lcobucci\JWT\Parser;
+use Lcobucci\JWT\Encoding\JoseEncoder;
+use Lcobucci\JWT\Token\Parser;
+use Lcobucci\JWT\Token\DataSet;
 
 class OAuthClient extends Client
 {
     public static function findByRequest(?Request $request = null) : ?OAuthClient
     {
-        $bearerToken = $request !== null ? $request->bearerToken() : RequestFacade::bearerToken();
-
-        $parsedJwt = (new Parser())->parse($bearerToken);
-
-        if ($parsedJwt->hasHeader('jti')) {
-            $tokenId = $parsedJwt->getHeader('jti');
-        } elseif ($parsedJwt->hasClaim('jti')) {
-            $tokenId = $parsedJwt->getClaim('jti');
-        } else {
-            Log::error('Invalid JWT token, Unable to find JTI header');
-            return null;
-        }
+        $bearerToken = $request !== null ? $request->bearerToken() : RequestFacade::bearerToken();        
+        $parser = new Parser(new JoseEncoder);
+        $parsedJwt = $parser->parse($bearerToken);
+        $claims = $parsedJwt->claims();
+        $tokenId = $claims->get('jti');
 
         $clientId = Token::find($tokenId)->client->id;
 

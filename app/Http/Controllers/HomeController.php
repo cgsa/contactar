@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Solicitud;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Passport\Client;
 
@@ -26,7 +27,10 @@ class HomeController extends Controller
     {
         $user = Auth::user();
         $cliente = Client::where('user_id', $user->id)->first();
-        //dd($cliente);
-        return view('dashboard', compact('cliente'));
+        $solicitudes = Solicitud::where('iduser', $user->id)
+        ->orderBy('id','DESC')
+        ->limit(10)
+        ->get();
+        return view('dashboard', compact('cliente','solicitudes'));
     }
 }

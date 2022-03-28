@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Procesos\NormalizarTelefono;
+use App\Http\Procesos\ValidatePhone;
 use App\Imports\TelefonosImport;
 use App\Models\Estado;
 use App\Models\OAuthClient;
 use App\Models\Solicitud;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -37,13 +37,13 @@ class TelefonoController extends Controller
             $telefono = DB::select($normalizador->sql());
             $estado = 'SNE';
 
-            if(is_countable($telefono[0]->Telefono)){
+            if(is_countable($telefono)){
                 $estado = 'SE';
             }
 
 
             if(
-                trim($telefono[0]->Localidad) === "No validado por enacom" 
+                trim($telefono[0]->localidad) === "No validado por enacom" 
             ){
                 throw new \Error('No se encontro información referente');
             }
@@ -55,10 +55,10 @@ class TelefonoController extends Controller
             
             Solicitud::create([
                 'numero_original'=>$campos['telefono'],
-                'numero_encontrado'=>$telefono[0]->Telefono,
-                'operador'=>$telefono[0]->Operador,
-                'localidad'=>$telefono[0]->Localidad,
-                'es_movil'=>is_countable($telefono[0]->Telefono)? $telefono[0]->Es_Movil: '',
+                'numero_encontrado'=>$telefono[0]->telefono,
+                'operador'=>$telefono[0]->operador,
+                'localidad'=>$telefono[0]->localidad,
+                'es_movil'=>is_countable($telefono)? $telefono[0]->es_movil: '',
                 'iduser'=> $idUser,
                 'idestado'=>$status->id
             ]);
@@ -67,7 +67,7 @@ class TelefonoController extends Controller
 
             return response()->json([
                 'status' => 201,
-                'telefono' => $telefono,
+                'telefono' => $telefono[0],
             ], 200);
         } 
         
@@ -91,6 +91,33 @@ class TelefonoController extends Controller
 
         return Auth::user()->id;
     }
+
+
+/*
+    public function validateTest(Request $request)
+    {
+        
+        $campos = $request->validate([
+        'telefono' => ['required', 'numeric','digits_between:8,14'],
+        'cod-pai' => ['required', 'string',Rule::in([
+            'VE','AR','BO','BR','CL','CO','EC','MX','PE','PY','UY'
+            ])],
+        'ip-user' =>['sometimes','ip']
+        ]);
+        
+        try {
+            $validate = new ValidatePhone($campos);
+            dd($validate->login());
+            
+        } catch (\Throwable $e) {
+            $code = is_numeric($e->getCode()) ? $e->getCode() : 500;
+            return response()->json([
+                'status' => $code,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+
+    }*/
 
 
     public function processFile( Request $request )

@@ -26,31 +26,33 @@ use Illuminate\Support\Facades\Route;
 });
 */
 
+
+
 Route::group([
-    'prefix' => 'auth'
+    'prefix' => 'v1',
+    'middleware' => 'JSONMiddleware'
 ], function () {
-    Route::post('login', [AuthController::class, 'login']);
-    Route::post('signup', [AuthController::class, 'register']);
+
 
     Route::group([
-      'middleware' => 'auth:api'
-    ], function() {
-        Route::get('logout', [AuthController::class, 'logout']);
-        Route::get('user', [AuthController::class, 'user']);
+        'prefix' => 'auth'
+    ], function () {
+        Route::post('login', [AuthController::class, 'login']);
+        Route::post('signup', [AuthController::class, 'register']);
+    
+        Route::group([
+          'middleware' => 'auth:api'
+        ], function() {
+            Route::get('logout', [AuthController::class, 'logout']);
+            Route::get('user', [AuthController::class, 'user']);
+        });
+    
     });
-
-});
-
-
-
-Route::group([
-    'prefix' => 'v1'
-], function () {
 
 
     Route::post('validate', [TelefonoController::class, 'identify'])->middleware('client');
-    Route::post('validate-file', [TelefonoController::class, 'processFile'])->middleware('client');
-
+    Route::post('validate-file', [TelefonoController::class, 'processFile'])->middleware('client');    
+    
 
     Route::group([
     'middleware' => 'auth:api'
