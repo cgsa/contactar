@@ -125,8 +125,8 @@ class TelefonosImport implements ToModel, WithValidation, WithHeadingRow, SkipsO
     {
         $estado = 'SNE';
 
-        if(is_countable($telefono) && trim($telefono->Telefono) !== "SD"){
-            return "SE";
+        if(is_countable($telefono) && trim($telefono->Telefono) != "SD"){
+            $estado = "SE";
         }
 
         return $estado;

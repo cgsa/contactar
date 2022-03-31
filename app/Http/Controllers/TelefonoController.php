@@ -68,7 +68,7 @@ class TelefonoController extends Controller
 
     private function getIdUser(Request $request)
     {
-        if($request->route()->uri == "api/v1/validate")
+        if($request->route()->uri == "api/v1/validate" || $request->route()->uri == "api/v1/validate-file")
         {
             return OAuthClient::findByRequest($request)->user_id;
         }
