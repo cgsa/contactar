@@ -2,8 +2,8 @@
 
 @section('content')
 @include('users.partials.header', [
-'title' => __('Hello') . ' '. auth()->user()->first_name,
-'description' => __('Este es su dashboard, desde aquí puede gestionar los servicios que le ofrecemos'),
+'title' => __('Hola') . ' '. auth()->user()->first_name,
+'description' => __('Este es tu dashboard, desde aquí puede gestionar los servicios que le ofrecemos'),
 'class' => 'col-lg-7'
 ])
 
@@ -79,7 +79,7 @@
                                     <div class="form-group">
                                         <select class="form-control" name="cod-pai" id="cod-pai" require>
                                             <option value="AR">{{_('AR - Argentina')}}</option>
-                                            <option value="MX">{{_('AR - México')}}</option>
+                                            <option value="MX">{{_('MX - México')}}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -173,7 +173,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="tab-pane tab-example-result mt-5 ml-4 show active" role="tabpanel" aria-labelledby="-component-tab">
+                <!--div class="tab-pane tab-example-result mt-5 ml-4 show active" role="tabpanel" aria-labelledby="-component-tab">
                     <blockquote class="blockquote">
                         <p class="mb-0">A continuación se muestra un ejemplo para realizar una peteción al API, para generar un access token.</p>
                         <footer class="blockquote-footer">
@@ -190,7 +190,7 @@
                         </pre>
                         </footer>
                     </blockquote>
-                </div>
+                </div-->
                 @endif
 
             </div>
@@ -280,6 +280,7 @@
 
         try {
 
+
             if (!localStorage.getItem('client-token')) {
                 login();
                 return true;
@@ -292,7 +293,6 @@
             console.debug(error);
         }
 
-
     });
 
 
@@ -301,43 +301,41 @@
         let telefono = $('#telefono-num').val();
         let codPai = $('#cod-pai').val();
 
-        if (telefono == '') {
-            alert('Debe agregar un teléfono para hacer la prueba');
-            return Error('Debe agregar un teléfono para hacer la prueba');
+        try {
+
+            if (telefono == '') {
+                alert('Debe agregar un teléfono para hacer la prueba');
+                return Error('Debe agregar un teléfono para hacer la prueba');
+            }
+
+            fetch("{{env('APP_URL')}}" + "/api/v1/validate", {
+                method: 'POST',
+                body: JSON.stringify({
+                    'cod-pai': codPai,
+                    'telefono': telefono
+                }),
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('client-token'),
+                    'Content-Type': 'application/json'
+                }
+            }).then(response => {
+                return response.json()
+            }).then(data => {
+                addRow(data.telefono);
+            });
+
+        } catch (error) {
+            
+            alert('Hubo un error al intentar procesar la operación');
+            localStorage.removeItem('client-token');
         }
 
-        fetch("{{env('APP_URL')}}" + "/api/v1/validate", {
-            method: 'POST',
-            body: JSON.stringify({
-                'cod-pai': codPai,
-                'telefono': telefono
-            }),
-            headers: {
-                'Authorization': 'Bearer ' + localStorage.getItem('client-token'),
-                'Content-Type': 'application/json'
-            }
-        }).then(response => {
-            return response.json()
-        }).then(data => {
-            addRow(data.telefono);
-        });
-    }
-
-
-    function addRow(phone) {
-        let row = "<tr>" + td(phone.telefono) + td(phone.operador) + td(phone.localidad) + td(phone.es_movil) + "</tr>";
-        $('#tbl_solicitudes tbody').prepend(row);
-        $('#tbl_solicitudes tr:last').remove();
-        $('#tabs-icons-text-2-tab').click();
-    }
-
-
-    function td(field) {
-        return "<td>" + field + "</td>";
+        
     }
 
 
     function login() {
+
         fetch("{{env('APP_URL')}}" + "/oauth/token", {
             method: 'POST',
             body: JSON.stringify({
@@ -355,6 +353,25 @@
             localStorage.setItem('client-token', data.access_token);
             validateNum();
         });
+    }
+
+
+    function addRow(phone) {
+
+        if(phone.telefono.trim() == "SD"){
+            alert('No se logró determinar el número de teléfono');
+            return false;
+        }
+
+        let row = "<tr>" + td(phone.telefono) + td(phone.operador) + td(phone.localidad) + td(phone.es_movil) + "</tr>";
+        $('#tbl_solicitudes tbody').prepend(row);
+        $('#tbl_solicitudes tr:last').remove();
+        $('#tabs-icons-text-2-tab').click();
+    }
+
+
+    function td(field) {
+        return "<td>" + field + "</td>";
     }
 </script>
 @endpush

@@ -60,9 +60,7 @@ Route::group([
         Route::post('search-telefono', [TelefonoController::class, 'identify']);
         Route::post('file-telefono', [TelefonoController::class, 'processFile']);
 
-        /**
-         * Resource Estados
-         */
+        /*
         Route::post('estado/add', [EstadoController::class, 'create']);
         Route::put('estado/update/{id}', [EstadoController::class, 'update']);
         Route::post('estado/all', [EstadoController::class, 'estados']);
@@ -73,33 +71,26 @@ Route::group([
         Route::post('paypal/pay',[PaymentController::class, 'payWithPayPal']);
         Route::get('paypal/status',[PaymentController::class, 'payPalStatus']);
 
-        /**
-         * Resource Planes
-         */
         Route::post('planes/add', [PlanController::class, 'create']);
         Route::put('planes/update/{id}', [PlanController::class, 'update']);
         Route::post('planes/all', [PlanController::class, 'planes']);
         Route::post('planes/get/{id}', [PlanController::class, 'plan']);
 
 
-        /**
-         * Resource Clientes
-         */
         Route::put('cliente/registro-datos-personales', [ClienteController::class, 'create']);
         Route::get('cliente/information-personal', [ClienteController::class, 'informationPersonal']);
         Route::post('cliente/all', [ClienteController::class, 'clientes']);
         Route::post('cliente/get/{id}', [ClienteController::class, 'cliente']);
         
-        /**
-         * Resource Usuarios
-         */
+         
         Route::put('usuario/information-personal', [AuthController::class, 'informationPersonal']);
         Route::put('usuario/validacion',[AuthController::class, 'validationUser']);
 
         /**
          * Resource Solicitudes
-         */
+         
         Route::get('solicitudes/all-search', [SolicitudController::class, 'solicitudesUsuarios']);
+        */
     });
 
 });

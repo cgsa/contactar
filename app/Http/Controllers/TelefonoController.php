@@ -21,7 +21,7 @@ class TelefonoController extends Controller
         
         // Chequea los campos de entrada
         $campos = $request->validate([
-         'telefono' => ['required', 'numeric','digits_between:8,14'],
+         'telefono' => ['required', 'numeric','digits_between:7,14'],
          'cod-pai' => ['required', 'string',Rule::in([
              'VE','AR','BO','BR','CL','CO','EC','MX','PE','PY','UY'
              ])],
@@ -43,30 +43,14 @@ class TelefonoController extends Controller
 
 
             if(
-                trim($telefono[0]->localidad) === "No validado por enacom" 
+                is_array($telefono) && trim($telefono[0]->localidad) == "No validado por argentina" 
             ){
                 throw new \Error('No se encontro información referente');
-            }
+            }            
             
-            
-            $status = Estado::state($estado, 'S');
-            
-            DB::beginTransaction();   
-            
-            Solicitud::create([
-                'numero_original'=>$campos['telefono'],
-                'numero_encontrado'=>$telefono[0]->telefono,
-                'operador'=>$telefono[0]->operador,
-                'localidad'=>$telefono[0]->localidad,
-                'es_movil'=>is_countable($telefono)? $telefono[0]->es_movil: '',
-                'iduser'=> $idUser,
-                'idestado'=>$status->id
-            ]);
-            
-            DB::commit();
+            $status = Estado::state($estado, 'S');    
 
             return response()->json([
-                'status' => 201,
                 'telefono' => $telefono[0],
             ], 200);
         } 
@@ -133,7 +117,7 @@ class TelefonoController extends Controller
         try { 
 
             DB::beginTransaction();   
-            $import = new TelefonosImport();
+            $import = new TelefonosImport($campos['cod-pai']);
             //$import->setbatchSize();
             $import->import($request->file('telefonos'),'local');
             
@@ -150,11 +134,9 @@ class TelefonoController extends Controller
             DB::commit();
 
             return response()->json([
-                'status' => 201,
                 'telefono' => $import->getProccessed(),
                 'failures' => $fail
-
-            ], 200);
+            ], 201);
         } 
         
         catch (\Throwable $e) {

@@ -39,7 +39,7 @@ class EnacomSeeder extends Seeder
   private function loadPhone()
   {
     try {
-      $this->phones = self::readFile(__DIR__ . '/../data/enacom_seeder.csv');
+      $this->phones = self::readFile(__DIR__ . '/../data/argentina_202203291548.csv');
       $rubros_count = count($this->phones);
       echo "[PHONES] Se han encontrado {$rubros_count} phones." . PHP_EOL;
     } catch (\Throwable $e) {
@@ -54,14 +54,15 @@ class EnacomSeeder extends Seeder
     $this->parsed_phones = array_map(function ($item) {
       //var_dump($item);die;
       return [
-        'servicio' => "$item[servicio]",
-        'modalidad' => "$item[modalidad]",
-        'localidad' => "$item[localidad]",
-        'indicativo' => "$item[indicativo]",
-        'bloque' => "$item[bloque]",
-        'resolucion' => "$item[resolucion]",
-        'fecha' => "$item[fecha]",
-        'is_cel_pho' => $item['is_cel_pho'],
+        'servicio'    => $item['servicio'],
+        'modalidad'   => $item['modalidad'],
+        'localidad'   => $item['localidad'],
+        'indicativo'  => $item['indicativo'],
+        'bloque'      => $item['bloque'],
+        'resolucion'  => $item['resolucion'],
+        'fecha'       => $item['fecha'],
+        'is_cel_pho'  => $item['is_cel_pho'],
+        'operador'  => $item['operador'],
       ];
 
     }, $this->phones);
@@ -78,7 +79,7 @@ class EnacomSeeder extends Seeder
   {
     try {
       $importer = new CsvImporter($file, true, ';');
-      $data = $importer->get();
+      $data = $importer->get(2000);
       return $data;
     } catch (\Exception $e) {
       throw $e;

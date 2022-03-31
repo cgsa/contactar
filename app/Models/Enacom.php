@@ -19,7 +19,8 @@ class Enacom extends Model
         'bloque',
         'resolucion',
         'fecha',
-        'is_cel_pho'
+        'is_cel_pho',
+        'operador'
     ];
 
 }

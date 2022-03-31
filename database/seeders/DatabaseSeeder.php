@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
             UsersTableSeeder::class,
             EstadoSeeder::class,
             MetodoPagoSeeder::class,
-            //EnacomSeeder::class
+            EnacomSeeder::class
         ]);
     }
 

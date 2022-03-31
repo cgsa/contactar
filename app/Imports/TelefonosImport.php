@@ -30,11 +30,14 @@ class TelefonosImport implements ToModel, WithValidation, WithHeadingRow, SkipsO
 
     private $telefonos = [];
 
+    private $codPai;
 
-    public function __construct()
+
+    public function __construct($codPai)
     {
         $this->user = Auth::user();
         $this->status = new Estado;
+        $this->codPai = $codPai;
     }
 
     /**
@@ -78,23 +81,25 @@ class TelefonosImport implements ToModel, WithValidation, WithHeadingRow, SkipsO
 
     private function addRegister( $campos )
     {
-        $telefono = $this->normalizador($campos['cod-pai'], $campos['telefono']);
-
+        $telefono = $this->normalizador($this->codPai, $campos['telefono']);
+        
         if(!is_object($telefono)){
             return false;
         }
 
-        $estado = $this->getStatus($this->condition($telefono->Telefono));
+        if($estado = $this->getStatus($this->condition($telefono))){
+            $this->telefonos[] = Solicitud::create([
+                'numero_original'=>$campos['telefono'],
+                'numero_encontrado'=>$telefono->telefono,
+                'operador'=>$telefono->operador,
+                'localidad'=>$telefono->localidad,
+                'es_movil'=>$telefono->es_movil,
+                'iduser'=> $this->user->id,
+                'idestado'=>$estado->id
+            ]);
+        }
         
-        $this->telefonos[] = Solicitud::create([
-            'numero_original'=>$campos['telefono'],
-            'numero_encontrado'=>$telefono->telefono,
-            'operador'=>$telefono->operador,
-            'localidad'=>$telefono->localidad,
-            'es_movil'=>$telefono->es_movil,
-            'iduser'=> $this->user->id,
-            'idestado'=>$estado->id
-        ]);
+        
     }
 
 
@@ -120,8 +125,8 @@ class TelefonosImport implements ToModel, WithValidation, WithHeadingRow, SkipsO
     {
         $estado = 'SNE';
 
-        if(is_countable($telefono)){
-            $estado = 'SE';
+        if(is_countable($telefono) && trim($telefono->Telefono) === "SD"){
+            return false;
         }
 
         return $estado;
