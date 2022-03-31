@@ -95,7 +95,7 @@ class TelefonosImport implements ToModel, WithValidation, WithHeadingRow, SkipsO
             'operador'=>$telefono->operador,
             'localidad'=>$telefono->localidad,
             'es_movil'=>$telefono->es_movil,
-            'iduser'=> $this->user->id,
+            'iduser'=> $this->user,
             'idestado'=>$estado->id
         ]);
         
