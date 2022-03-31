@@ -48,7 +48,21 @@ class TelefonoController extends Controller
                 throw new \Error('No se encontro información referente');
             }            
             
-            $status = Estado::state($estado, 'S');    
+            $status = Estado::state($estado, 'S'); 
+            
+            DB::beginTransaction();   
+
+            Solicitud::create([
+                'numero_original'=>$campos['telefono'],
+                'numero_encontrado'=>$telefono[0]->telefono,
+                'operador'=>$telefono[0]->operador,
+                'localidad'=>$telefono[0]->localidad,
+                'es_movil'=>is_countable($telefono)? $telefono[0]->es_movil: '',
+                'iduser'=> $idUser,
+                'idestado'=>$status->id
+            ]);
+
+            DB::commit();
 
             return response()->json([
                 'telefono' => $telefono[0],
