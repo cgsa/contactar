@@ -87,25 +87,25 @@ class TelefonosImport implements ToModel, WithValidation, WithHeadingRow, SkipsO
             return false;
         }
 
-        if($estado = $this->getStatus($this->condition($telefono))){
-            $this->telefonos[] = Solicitud::create([
-                'numero_original'=>$campos['telefono'],
-                'numero_encontrado'=>$telefono->telefono,
-                'operador'=>$telefono->operador,
-                'localidad'=>$telefono->localidad,
-                'es_movil'=>$telefono->es_movil,
-                'iduser'=> $this->user->id,
-                'idestado'=>$estado->id
-            ]);
-        }
+        $estado = $this->getStatus($this->condition($telefono));
+
+        $this->telefonos[] = Solicitud::create([
+            'numero_original'=>$campos['telefono'],
+            'numero_encontrado'=>$telefono->telefono,
+            'operador'=>$telefono->operador,
+            'localidad'=>$telefono->localidad,
+            'es_movil'=>$telefono->es_movil,
+            'iduser'=> $this->user->id,
+            'idestado'=>$estado->id
+        ]);
         
         
     }
 
 
-    private function getStatus($condition)
+    private function getStatus($condition = false)
     {
-        return $this->status->state('S',$condition);
+        return $this->status->state('S',$condition);        
     }
 
 
@@ -125,8 +125,8 @@ class TelefonosImport implements ToModel, WithValidation, WithHeadingRow, SkipsO
     {
         $estado = 'SNE';
 
-        if(is_countable($telefono) && trim($telefono->Telefono) === "SD"){
-            return false;
+        if(is_countable($telefono) && trim($telefono->Telefono) !== "SD"){
+            return "SE";
         }
 
         return $estado;
