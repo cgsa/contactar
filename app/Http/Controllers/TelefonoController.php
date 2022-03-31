@@ -120,6 +120,7 @@ class TelefonoController extends Controller
             $import = new TelefonosImport($campos['cod-pai']);
             //$import->setbatchSize();
             $import->import($request->file('telefonos'),'local');
+            $fail = "";
             
             foreach ($import->failures() as $failure) {
                 $fail = [
