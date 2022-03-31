@@ -117,7 +117,8 @@ class TelefonoController extends Controller
         try { 
 
             DB::beginTransaction();   
-            $import = new TelefonosImport($campos['cod-pai']);
+            $user = $this->getIdUser($request);
+            $import = new TelefonosImport($campos['cod-pai'], $user);
             //$import->setbatchSize();
             $import->import($request->file('telefonos'),'local');
             $fail = "";

@@ -33,9 +33,9 @@ class TelefonosImport implements ToModel, WithValidation, WithHeadingRow, SkipsO
     private $codPai;
 
 
-    public function __construct($codPai)
+    public function __construct($codPai, $user)
     {
-        $this->user = Auth::user();
+        $this->user = $user;
         $this->status = new Estado;
         $this->codPai = $codPai;
     }
