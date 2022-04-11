@@ -144,6 +144,7 @@
                                         <table class="table align-items-center" id="tbl_solicitudes">
                                             <thead class="thead-light">
                                                 <tr>
+                                                    <th scope="col">{{_('Original')}}</th>
                                                     <th scope="col">{{_('Teléfono')}}</th>
                                                     <th scope="col">{{_('Operador')}}</th>
                                                     <th scope="col">{{_('Localidad')}}</th>
@@ -153,10 +154,13 @@
                                             <tbody>
                                                 @forelse ($solicitudes as $solicitud)
                                                 <tr>
-                                                    <td id="clientId" rel="{{ $cliente->id }}">
+                                                    <td>
+                                                        {{ $solicitud->numero_original }}
+                                                    </td>
+                                                    <td>
                                                         {{ $solicitud->numero_encontrado }}
                                                     </td>
-                                                    <td id="clientSecret" rel="{{ $cliente->secret }}">
+                                                    <td>
                                                         {{ $solicitud->operador }}
                                                     </td>
                                                     <td>
@@ -366,15 +370,18 @@
 
     function addRow(phone) {
 
-        if(phone.telefono.trim() == "SD"){
+        if(phone.numero_encontrado.trim() == "SD"){
             alert('No se logró determinar el número de teléfono');
             return false;
         }
 
-        let row = "<tr>" + td(phone.telefono) + td(phone.operador) + td(phone.localidad) + td(phone.es_movil) + "</tr>";
+        let row = "<tr>" + td(phone.numero_original) + td(phone.numero_encontrado) + td(phone.operador) + td(phone.localidad) + td(phone.es_movil) + "</tr>";
         $('#tbl_solicitudes tbody').prepend(row);
-        $('#tbl_solicitudes tr:last').remove();
         $('#tabs-icons-text-2-tab').click();
+        console.log($('#tbl_solicitudes tr').length());
+        if($('#tbl_solicitudes tr').length >= 10){
+            $('#tbl_solicitudes tr:last').remove();
+        }
     }
 
 
