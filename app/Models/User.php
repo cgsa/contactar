@@ -24,7 +24,8 @@ class User extends Authenticatable
         'email',
         'password',
         'is_validated',
-        'validation_token'
+        'validation_token',
+        'terms_conditions'
     ];
 
     /**
@@ -44,6 +45,8 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'is_validated'=>'boolean',
+        'terms_conditions'=>'boolean'
     ];
 
 

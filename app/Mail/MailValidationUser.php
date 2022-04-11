@@ -27,7 +27,7 @@ class MailValidationUser extends Mailable
         //var_dump($vars);die;
         $frontend_url = "http://contactar.com.ar";//config('onehouser.frontend_url');
 
-        $this->link =  "{$frontend_url}/usuario/validar-cuenta?code=" . $vars['validation_token'];
+        $this->link =  "{$frontend_url}/validate-account?token=" . $vars['validation_token'];
         $this->subject(__('Validación de cuenta'));
         $this->vars = $vars;
     }

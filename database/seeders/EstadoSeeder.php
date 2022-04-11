@@ -39,11 +39,11 @@ class EstadoSeeder extends Seeder
     private function loadEstado()
     {
         try {
-        $this->estados = self::readFile(__DIR__ . '/../data/estado_seeder.csv');
-        $rubros_count = count($this->estados);
-        echo "[ESTADOS] Se han encontrado {$rubros_count} estados." . PHP_EOL;
+            $this->estados = self::readFile(__DIR__ . '/../data/estado_seeder.csv');
+            $rubros_count = count($this->estados);
+            echo "[ESTADOS] Se han encontrado {$rubros_count} estados." . PHP_EOL;
         } catch (\Throwable $e) {
-        throw $e;
+            throw $e;
         }
     }
 

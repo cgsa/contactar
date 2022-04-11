@@ -26,15 +26,24 @@
                             </p>
                         </div>
                     </div>
+                    @if(!$user->is_validated)
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="alert alert-warning" role="alert">
+                                <strong>{{_('Correo no validado')}}!</strong> {{_('antes de continuar debe validar su cuenta de correo')}}
+                            </div>
+                        </div>
+                    </div>
+                    @endif
 
-                    @if(!$cliente)
+                    @if($user->is_validated && !$cliente)
                     <!-- Button trigger modal -->
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
                         Crear Cliente
                     </button>
                     @endif
                 </div>
-                @if($cliente)
+                @if($user->is_validated && $cliente)
                 <div class="table-responsive">
                     <table class="table align-items-center">
                         <thead class="thead-light">
@@ -240,6 +249,9 @@
                     <button type="submit" class="btn btn-primary bt-add-client">Save</button>
                 </div>
             </form>
+            <form id="client-add-id" method="post" action="" autocomplete="off">
+                @csrf
+            </form>
         </div>
     </div>
 </div>
@@ -255,6 +267,7 @@
     const clientId = $('#clientId').attr('rel');
     const clientSecret = $('#clientSecret').attr('rel');
     const grantType = 'client_credentials';
+    const crfToken = '{{csrf_token()}}';
 
     $('.bt-add-client').click(function(event) {
 
@@ -280,13 +293,7 @@
 
         try {
 
-
-            if (!localStorage.getItem('client-token')) {
-                login();
-                return true;
-            }
-
-            validateNum();
+            login();
 
         } catch (error) {
             alert('Hubo un error al intentar procesar la operación');
@@ -296,7 +303,7 @@
     });
 
 
-    function validateNum() {
+    function validateNum(token) {
 
         let telefono = $('#telefono-num').val();
         let codPai = $('#cod-pai').val();
@@ -312,10 +319,11 @@
                 method: 'POST',
                 body: JSON.stringify({
                     'cod-pai': codPai,
-                    'telefono': telefono
+                    'telefono': telefono,
+                    'from': "WEBSITE"
                 }),
                 headers: {
-                    'Authorization': 'Bearer ' + localStorage.getItem('client-token'),
+                    'Authorization': 'Bearer ' + token,
                     'Content-Type': 'application/json'
                 }
             }).then(response => {
@@ -350,8 +358,8 @@
         }).then(response => {
             return response.json()
         }).then(data => {
-            localStorage.setItem('client-token', data.access_token);
-            validateNum();
+            //localStorage.setItem('client-token', data.access_token);
+            validateNum(data.access_token);
         });
     }
 

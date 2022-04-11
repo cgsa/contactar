@@ -79,12 +79,17 @@
                             <div class="row my-4">
                                 <div class="col-12">
                                     <div class="custom-control custom-control-alternative custom-checkbox">
-                                        <input class="custom-control-input" id="customCheckRegister" type="checkbox">
+                                        <input class="custom-control-input" id="customCheckRegister" name="terms_conditions" value="1" type="checkbox">
                                         <label class="custom-control-label" for="customCheckRegister">
                                             <span class="text-muted">{{ __('Estoy de acuerdo con las ') }} <a href="#!">{{ __('Políticas de Privacidad') }}</a></span>
                                         </label>
                                     </div>
                                 </div>
+                                @if ($errors->has('terms_conditions'))
+                                    <span class="invalid-feedback" style="display: block;" role="alert">
+                                        <strong>{{ $errors->first('terms_conditions') }}</strong>
+                                    </span>
+                                @endif
                             </div>
                             <div class="text-center">
                                 <button type="submit" class="btn btn-primary mt-4">{{ __('Crear usuario') }}</button>

@@ -25,7 +25,10 @@ class TelefonoController extends Controller
          'cod-pai' => ['required', 'string',Rule::in([
              'VE','AR','BO','BR','CL','CO','EC','MX','PE','PY','UY'
              ])],
-         'ip-user' =>['sometimes','ip']
+         'ip-user' =>['sometimes','ip'],
+         'from' => ['sometimes', 'string',Rule::in([
+            'WEBSITE','API'
+            ])],
         ]);
         
         try { 
@@ -49,23 +52,28 @@ class TelefonoController extends Controller
             }            
             
             $status = Estado::state($estado, 'S'); 
+            if(isset($campos['from']) && $campos['from'] == "WEBSITE"){
+                OAuthClient::deleteTokenIdByRequest($request);
+            }
+            
             
             DB::beginTransaction();   
 
-            Solicitud::create([
+            $solicitud = Solicitud::create([
                 'numero_original'=>$campos['telefono'],
                 'numero_encontrado'=>$telefono[0]->telefono,
                 'operador'=>$telefono[0]->operador,
                 'localidad'=>$telefono[0]->localidad,
                 'es_movil'=>is_countable($telefono)? $telefono[0]->es_movil: '',
                 'iduser'=> $idUser,
-                'idestado'=>$status->id
+                'idestado'=>$status->id,
+                'cod_pai'=>$campos['cod-pai']
             ]);
 
             DB::commit();
 
             return response()->json([
-                'telefono' => $telefono[0],
+                'telefono' => $solicitud
             ], 200);
         } 
         

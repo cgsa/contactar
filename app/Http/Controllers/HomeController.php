@@ -31,6 +31,6 @@ class HomeController extends Controller
         ->orderBy('id','DESC')
         ->limit(10)
         ->get();
-        return view('dashboard', compact('cliente','solicitudes'));
+        return view('dashboard', compact('cliente','solicitudes','user'));
     }
 }

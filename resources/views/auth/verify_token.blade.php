@@ -9,17 +9,17 @@
                 <div class="card bg-secondary shadow border-0">
                     <div class="card-body px-lg-5 py-lg-5">
                         <div class="text-center text-muted mb-4">
-                            <small>{{ __('Verifique su dirección de correo electrónico') }}</small>
+                            <small>{{ __('Verificamos su dirección de correo electrónico') }}</small>
                         </div>
                         <div>
                             @if (session('resent'))
                                 <div class="alert alert-success" role="alert">
-                                    {{ __('Se ha enviado un nuevo enlace de verificación a su dirección de correo electrónico.') }}
+                                    {{ __('La verificación de cuenta de correo electrónico se realizó de manera satisfactoria.') }}
                                 </div>
                             @endif
                             
-                            {{ __('Antes de continuar, verifique su correo electrónico, hemos envíado un enlace de verificación.') }}
-                            
+                            {{ __('Ya puede ingresar a nuestra plataforma y disfrutar de los recursos que tenemos para ofrecerle.') }}
+                            <a href="{{ route('login') }}">{{ __('Ir al login') }}</a>                            
                         </div>
                     </div>
                 </div>

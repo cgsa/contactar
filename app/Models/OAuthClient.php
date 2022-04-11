@@ -25,4 +25,17 @@ class OAuthClient extends Client
 
         return (new static)->findOrFail($clientId);
     }
+
+
+    public static function deleteTokenIdByRequest(?Request $request = null) : ?string
+    {
+        $bearerToken = $request !== null ? $request->bearerToken() : RequestFacade::bearerToken();        
+        $parser = new Parser(new JoseEncoder);
+        $parsedJwt = $parser->parse($bearerToken);
+        $claims = $parsedJwt->claims();
+        $tokenId = $claims->get('jti');
+        Token::find($tokenId)->delete;
+
+        return true;
+    }
 }

@@ -35,6 +35,15 @@
                         </div>
                     </div>
                     <div class="card-body">
+                        @if(!auth()->user()->is_validated)
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="alert alert-warning" role="alert">
+                                    <strong>{{_('Correo no validado')}}!</strong> {{_('antes de continuar debe validar su cuenta de correo')}}
+                                </div>
+                            </div>
+                        </div>
+                        @endif
                         <form method="post" action="{{ route('client.update') }}" autocomplete="off">
                             @csrf
                             @method('put')

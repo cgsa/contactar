@@ -105,7 +105,7 @@ class TelefonosImport implements ToModel, WithValidation, WithHeadingRow, SkipsO
 
     private function getStatus($condition = false)
     {
-        return $this->status->state('S',$condition);        
+        return $this->status->state($condition,'S');        
     }
 
 
