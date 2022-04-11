@@ -25,7 +25,8 @@ class Solicitud extends Model
         'localidad',
         'es_movil',
         'iduser',
-        'idestado'
+        'idestado',
+        'cod_pai'
     ];
 
     /**
